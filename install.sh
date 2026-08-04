@@ -103,7 +103,8 @@ install_paru() {
 
 install_core() {
     info "安装核心软件包（官方仓库）..."
-    sudo pacman -S --needed --noconfirm $(cat "$SOURCE_DIR/pkglist/core.txt")
+    mapfile -t core_pkgs < <(grep -vE '^\s*#|^\s*$' "$SOURCE_DIR/pkglist/core.txt")
+    sudo pacman -S --needed --noconfirm "${core_pkgs[@]}"
 
     detect_aur_helper
     if [ -z "$AUR_HELPER" ]; then
@@ -112,7 +113,8 @@ install_core() {
     ok "AUR 助手: $AUR_HELPER"
 
     info "安装核心软件包（AUR：桌面壳 + 生态 + 工具箱）..."
-    "$AUR_HELPER" -S --needed --noconfirm $(cat "$SOURCE_DIR/pkglist/aur.txt")
+    mapfile -t aur_pkgs < <(grep -vE '^\s*#|^\s*$' "$SOURCE_DIR/pkglist/aur.txt")
+    "$AUR_HELPER" -S --needed --noconfirm "${aur_pkgs[@]}"
 }
 
 # ---------- 3. 部署配置 ----------
