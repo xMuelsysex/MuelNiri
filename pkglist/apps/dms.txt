@@ -1,2 +1,0 @@
-# DMS 桌面壳（Material 3 Quickshell 桌面，与 Noctalia 二选一；选装后自动部署配置）
-aur:dms-shell dms-shell-niri dsearch-bin

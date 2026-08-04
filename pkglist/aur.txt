@@ -2,3 +2,6 @@
 quickshell-git
 noctalia-git
 mpvpaper-git
+dms-shell
+dms-shell-niri
+dsearch-bin

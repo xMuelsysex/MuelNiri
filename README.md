@@ -42,6 +42,7 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 | 类别 | 软件包 |
 |---|---|
 | 窗口/桌面 | `niri`、`quickshell-git`、`noctalia-git` |
+| DMS 桌面壳 | `dms-shell`、`dms-shell-niri`、`dsearch-bin` | Material 3 桌面壳（与 Noctalia 双壳并存，见注意事项） |
 | 壁纸 | `mpvpaper-git`、`ffmpeg` |
 | 终端/Shell | `kitty`、`fish`、`starship`、`fastfetch` |
 | 输入法 | `fcitx5`、`fcitx5-rime`（雾凇拼音） |
@@ -57,12 +58,10 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 | 浏览器 | `firefox` + `python-pywalfox` | 随壁纸自动换肤 |
 | VS Code | `visual-studio-code-bin` | AUR 预编译 |
 | 截图 | `mark-shot` | 截图标注（绑定 `Mod+Shift+S`） |
-| 音乐 | `lx-music-desktop-bin` | AUR 预编译 |
 | 视频 | `mpv` | 附带 `hwdec=auto-safe` 优化 |
 | 游戏 | `steam` + `mangohud` + `gamescope` | |
 | 监控 | `btop` + `mission-center` + `yazi` + `gdu` | |
 | 代理 | `clash-verge-rev-bin` | AUR 预编译 |
-| DMS | `dms-shell` + `dms-shell-niri` + `dsearch-bin` | Material 3 桌面壳，与 Noctalia **二选一**（见注意事项） |
 | Shorin 工具箱 | `shorin-contrib-git` + `shorin-screenrec-menu-git` + `niri-sidebar-git` | pac TUI 装包、sysup 更新、换源、btrfs 快照、录屏菜单、侧边栏 |
 
 ## 快捷键 / Keybindings
@@ -106,7 +105,7 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 
 - **可选增强（Noctalia overview 动画补丁）**：`patches/noctalia-overview-animation/` 收录了 dock 随 overview 收放的补丁（源码级，需自行编译）；构建后放入 `~/.local/share/noctalia-overview-animation/noctalia` 自动生效，入口脚本会回退到系统版
 - **回滚**：`~/.config-backup-<时间戳>/` 中保留安装前的全部配置，确认无误后可删除
-- **DMS 与 Noctalia 二选一**：两者都是 Quickshell 桌面壳，同时运行会叠加。选装 DMS 后脚本会自动启用其 spawn；若改用 DMS，请注释 `~/.config/niri/config.kdl` 中的 `"noctalia"` spawn 并重载配置（`Mod+Shift+R`）；若保留 Noctalia，请注释 `"dms"` / `"dsearch"` 两行
+- **DMS 与 Noctalia 双桌面壳**：两者都是 Quickshell 桌面壳，默认均已安装并启用 spawn，同时运行会叠加。只用 Noctalia：注释 `~/.config/niri/config.kdl` 中的 `"dms"` / `"dsearch"` 两行；只用 DMS：注释 `"noctalia"` spawn，并重载配置（`Mod+Shift+R`）
 - **壁纸**：静态壁纸与 3 张压缩版动态壁纸（720p，各 2MB 左右）已随仓库分发；更多视频壁纸请自行放入 `~/Pictures/Wallpapers/video/`
 - **locale**：默认 `zh_CN.UTF-8`，若系统未生成该 locale，请修改 `~/.config/niri/config.kdl` 中的 `LANG`
 - **NVIDIA**：脚本检测到 NVIDIA 显卡时自动启用 `GBM_BACKEND=nvidia-drm` 等环境变量
@@ -115,9 +114,10 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 ## 致谢 / Credits
 
 - [Shorin-ArchLinux-Guide](https://github.com/SHORiN-KiWATA/Shorin-ArchLinux-Guide/tree/main) —— 一键配置脚本的模块化设计参考
+- [NyxNiri](https://github.com/ech678/NyxNiri) —— 本配置的 dotfiles 最初来源
 
 ## License
 
 GPLv3，见 [LICENSE](LICENSE)。
 
-配置最初来源于 MuelNiri 项目（原 NyxNiri），配合 Noctalia V5 使用；壁纸版权归原作者所有。
+配置最初来源于 NyxNiri 项目，配合 Noctalia V5 使用；壁纸版权归原作者所有。

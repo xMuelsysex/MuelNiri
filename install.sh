@@ -195,18 +195,7 @@ deploy_dotfiles() {
     fi
 }
 
-# ---------- 4. 可选软件菜单 ----------
-load_app_modules() {
-    APP_MODULES=()
-    local f desc
-    for f in "$SOURCE_DIR"/pkglist/apps/*.txt; do
-        [ -f "$f" ] || continue
-        desc="$(grep -m1 '^#' "$f" | sed 's/^# //')"
-        APP_MODULES+=("$(basename "$f" .txt)|$desc|$f")
-    done
-}
-
-# DMS 桌面壳：部署配置并启用 niri 侧 spawn（DMS 与 Noctalia 二选一）
+# DMS 桌面壳：部署配置并启用 niri 侧 spawn（与 Noctalia 同为必装）
 deploy_dms() {
     info "部署 DMS 配置..."
     local t
@@ -228,17 +217,21 @@ deploy_dms() {
     sed -i 's|^// spawn-at-startup "dms" "run"|spawn-at-startup "dms" "run"|' "$HOME/.config/niri/config.kdl"
     sed -i 's|^// spawn-at-startup "dsearch" "serve"|spawn-at-startup "dsearch" "serve"|' "$HOME/.config/niri/config.kdl"
 
-    warn "DMS 与 Noctalia 是两套桌面壳，建议二选一："
-    warn "  保留 Noctalia：注释掉 config.kdl 中 'spawn-at-startup \"dms\"' 与 '\"dsearch\"' 两行"
-    warn "  改用 DMS：注释掉 config.kdl 中 '\"noctalia\"' spawn，并重载配置 (Mod+Shift+R)"
+    warn "DMS 与 Noctalia 两套桌面壳均已安装并启用，同时运行会叠加："
+    warn "  只用 Noctalia：注释掉 config.kdl 中 'spawn-at-startup \"dms\"' 与 '\"dsearch\"' 两行"
+    warn "  只用 DMS：注释掉 config.kdl 中 '\"noctalia\"' spawn，并重载配置 (Mod+Shift+R)"
     warn "  DMS 随机壁纸命令: random-anime-wallpaper-dms"
 }
 
-# 模块安装后的额外部署钩子
-module_post_deploy() {
-    case "$1" in
-        dms) deploy_dms ;;
-    esac
+# ---------- 4. 可选软件菜单 ----------
+load_app_modules() {
+    APP_MODULES=()
+    local f desc
+    for f in "$SOURCE_DIR"/pkglist/apps/*.txt; do
+        [ -f "$f" ] || continue
+        desc="$(grep -m1 '^#' "$f" | sed 's/^# //')"
+        APP_MODULES+=("$(basename "$f" .txt)|$desc|$f")
+    done
 }
 
 app_menu() {
@@ -297,7 +290,6 @@ app_menu() {
                 aur:*)  "$AUR_HELPER" -S --needed --noconfirm ${line#aur:} ;;
             esac
         done < <(grep -vE '^\s*#|^\s*$' "$file")
-        module_post_deploy "$name"
     done
 }
 
@@ -369,6 +361,7 @@ main() {
 
     install_core
     deploy_dotfiles
+    deploy_dms
     app_menu
     print_tutorial
 }
