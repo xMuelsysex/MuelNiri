@@ -12,7 +12,7 @@
 set -euo pipefail
 
 # 发布前请把 REPO_URL 换成实际仓库地址
-REPO_URL="${REPO_URL:-https://github.com/xMuelsysex/niri_config.git}"
+REPO_URL="${REPO_URL:-https://github.com/xMuelsysex/MuelNiri.git}"
 REPO_BRANCH="main"
 
 # ---------- 颜色 ----------

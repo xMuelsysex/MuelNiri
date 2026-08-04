@@ -24,7 +24,7 @@
 刚装好的 Arch / CachyOS 系统（任意终端或 TTY）：
 
 ```bash
-curl -L https://github.com/xMuelsysex/niri_config/raw/main/install.sh | bash
+curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 ```
 
 脚本会自动：
