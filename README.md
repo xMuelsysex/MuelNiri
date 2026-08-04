@@ -63,6 +63,7 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 | 监控 | `btop` + `mission-center` + `yazi` + `gdu` | |
 | 代理 | `clash-verge-rev-bin` | AUR 预编译 |
 | DMS | `dms-shell` + `dms-shell-niri` + `dsearch-bin` | Material 3 桌面壳，与 Noctalia **二选一**（见注意事项） |
+| Shorin 工具箱 | `shorin-contrib-git` + `shorin-screenrec-menu-git` + `niri-sidebar-git` | pac TUI 装包、sysup 更新、换源、btrfs 快照、录屏菜单、侧边栏 |
 
 ## 快捷键 / Keybindings
 
@@ -110,6 +111,10 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 - **locale**：默认 `zh_CN.UTF-8`，若系统未生成该 locale，请修改 `~/.config/niri/config.kdl` 中的 `LANG`
 - **NVIDIA**：脚本检测到 NVIDIA 显卡时自动启用 `GBM_BACKEND=nvidia-drm` 等环境变量
 - **显示管理器**：脚本不安装 DM；需要的话 `sudo pacman -S ly && sudo systemctl enable ly`
+
+## 致谢 / Credits
+
+- [Shorin-ArchLinux-Guide](https://github.com/SHORiN-KiWATA/Shorin-ArchLinux-Guide/tree/main) —— 一键配置脚本的模块化设计参考
 
 ## License
 
