@@ -115,4 +115,4 @@ curl -L https://github.com/xMuelsysex/niri_config/raw/main/install.sh | bash
 
 GPLv3，见 [LICENSE](LICENSE)。
 
-配置基于 [MuelNiri](https://github.com/ech678/MuelNiri) 与 [Noctalia V5](https://noctalia.dev/)，壁纸版权归原作者所有。
+配置最初来源于 MuelNiri 项目（原 NyxNiri），配合 Noctalia V5 使用；壁纸版权归原作者所有。
