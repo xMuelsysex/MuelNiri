@@ -113,6 +113,30 @@ install_core() {
 
     info "安装核心软件包（AUR）..."
     "$AUR_HELPER" -S --needed --noconfirm $(cat "$SOURCE_DIR/pkglist/aur.txt")
+
+    # 按安装选择的桌面壳装对应壳包
+    if [ "$SHELL_CHOICE" = "dms" ]; then
+        info "安装 DMS 桌面壳（dms-shell 系列）..."
+        sudo pacman -S --needed --noconfirm vulkan-headers
+        "$AUR_HELPER" -S --needed --noconfirm dms-shell dms-shell-niri dsearch-bin
+    else
+        info "安装 Noctalia 桌面壳..."
+        "$AUR_HELPER" -S --needed --noconfirm noctalia-git mpvpaper-git
+    fi
+}
+
+# ---------- 2.5 桌面壳选择 ----------
+choose_shell() {
+    SHELL_CHOICE="noctalia"
+    echo
+    info "桌面壳（二选一，均基于 Quickshell + Niri，配置互斥）"
+    echo "  [1] Noctalia V5（默认）：Material You 动态取色桌面壳"
+    echo "  [2] DMS：Material 3 桌面壳（DankMaterialShell）"
+    read -rp "  选择 [1/2，回车默认 Noctalia]: " choice < /dev/tty || true
+    case "$choice" in
+        2|dms|DMS) SHELL_CHOICE="dms" ;;
+    esac
+    ok "桌面壳: $SHELL_CHOICE"
 }
 
 # ---------- 3. 部署配置 ----------
@@ -193,34 +217,56 @@ deploy_dotfiles() {
         mkdir -p "$HOME/.config/mpv"
         cp "$SOURCE_DIR/dotfiles/.config/mpv/config" "$HOME/.config/mpv/config"
     fi
+
+    # 文件管理器配套：Templates / 默认终端 / 任意终端打开
+    mkdir -p "$HOME/Templates"
+    [ -f "$HOME/Templates/new.sh" ] || printf '#!/usr/bin/env bash\n' > "$HOME/Templates/new.sh"
+    touch "$HOME/Templates/new"
+    if [ ! -f "$HOME/.config/xdg-terminals.list" ] || ! grep -q kitty "$HOME/.config/xdg-terminals.list" 2>/dev/null; then
+        mkdir -p "$HOME/.config"
+        printf 'kitty.desktop\n' >> "$HOME/.config/xdg-terminals.list"
+    fi
+    if command -v gsettings >/dev/null 2>&1; then
+        dbus-run-session gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal kitty 2>/dev/null || true
+    fi
 }
 
-# DMS 桌面壳：部署配置并启用 niri 侧 spawn（与 Noctalia 同为必装）
-deploy_dms() {
-    info "部署 DMS 配置..."
-    local t
-    for t in ".config/DankMaterialShell" ".config/danksearch"; do
-        if [ -e "$HOME/$t" ]; then
-            mkdir -p "$BACKUP_DIR/$(dirname "$t")"
-            mv "$HOME/$t" "$BACKUP_DIR/$t"
-            warn "已备份原有 $t → $BACKUP_DIR/$t"
-        fi
-    done
-    mkdir -p "$HOME/.config/DankMaterialShell" "$HOME/.config/danksearch" "$HOME/.local/bin"
-    cp -a "$SOURCE_DIR/dotfiles-extra/dms/.config/DankMaterialShell/." "$HOME/.config/DankMaterialShell/"
-    cp -a "$SOURCE_DIR/dotfiles-extra/dms/.config/danksearch/." "$HOME/.config/danksearch/"
-    cp -n "$SOURCE_DIR/dotfiles-extra/dms/.local/bin/random-anime-wallpaper-dms" "$HOME/.local/bin/" 2>/dev/null || true
+# 桌面壳部署：按安装选择启用对应 niri spawn 段（两壳共用 niri，配置互斥）
+deploy_shell() {
+    local niri_conf="$HOME/.config/niri/config.kdl"
 
-    sed -i "s|__HOME__|$HOME|g" "$HOME/.config/danksearch/config.toml"
+    if [ "$SHELL_CHOICE" = "dms" ]; then
+        info "部署 DMS 配置（启用 dms/dsearch spawn，注释 Noctalia spawn）..."
+        local t
+        for t in ".config/DankMaterialShell" ".config/danksearch"; do
+            if [ -e "$HOME/$t" ]; then
+                mkdir -p "$BACKUP_DIR/$(dirname "$t")"
+                mv "$HOME/$t" "$BACKUP_DIR/$t"
+                warn "已备份原有 $t → $BACKUP_DIR/$t"
+            fi
+        done
+        mkdir -p "$HOME/.config/DankMaterialShell" "$HOME/.config/danksearch" "$HOME/.local/bin"
+        cp -a "$SOURCE_DIR/dotfiles-extra/dms/.config/DankMaterialShell/." "$HOME/.config/DankMaterialShell/"
+        cp -a "$SOURCE_DIR/dotfiles-extra/dms/.config/danksearch/." "$HOME/.config/danksearch/"
+        cp -n "$SOURCE_DIR/dotfiles-extra/dms/.local/bin/random-anime-wallpaper-dms" "$HOME/.local/bin/" 2>/dev/null || true
+        sed -i "s|__HOME__|$HOME|g" "$HOME/.config/danksearch/config.toml"
 
-    # 启用 niri 配置中的 DMS spawn（此前被注释的 Noctalia 迁移残留）
-    sed -i 's|^// spawn-at-startup "dms" "run"|spawn-at-startup "dms" "run"|' "$HOME/.config/niri/config.kdl"
-    sed -i 's|^// spawn-at-startup "dsearch" "serve"|spawn-at-startup "dsearch" "serve"|' "$HOME/.config/niri/config.kdl"
+        # 启用 DMS spawn 段，注释 Noctalia spawn 段
+        sed -i 's|^// include "shells/dms.kdl"|include "shells/dms.kdl"|' "$niri_conf"
+        sed -i 's|^include "shells/noctalia.kdl"|// include "shells/noctalia.kdl"|' "$niri_conf"
 
-    warn "DMS 与 Noctalia 两套桌面壳均已安装并启用，同时运行会叠加："
-    warn "  只用 Noctalia：注释掉 config.kdl 中 'spawn-at-startup \"dms\"' 与 '\"dsearch\"' 两行"
-    warn "  只用 DMS：注释掉 config.kdl 中 '\"noctalia\"' spawn，并重载配置 (Mod+Shift+R)"
-    warn "  DMS 随机壁纸命令: random-anime-wallpaper-dms"
+        # 黑盒校验：DMS 核心二进制
+        for c in dms dsearch quickshell; do
+            command -v "$c" >/dev/null 2>&1 || warn "未找到 $c 命令——DMS 可能安装失败，请检查 AUR 构建日志"
+        done
+        warn "DMS 随机壁纸命令: random-anime-wallpaper-dms"
+    else
+        info "部署 Noctalia 配置（默认）..."
+        # 幂等保险：确保 Noctalia spawn 段启用、DMS 段关闭
+        sed -i 's|^// include "shells/noctalia.kdl"|include "shells/noctalia.kdl"|' "$niri_conf"
+        sed -i 's|^include "shells/dms.kdl"|// include "shells/dms.kdl"|' "$niri_conf"
+        command -v noctalia >/dev/null 2>&1 || warn "未找到 noctalia 命令——Noctalia 可能安装失败，请检查 AUR 构建日志"
+    fi
 }
 
 # ---------- 4. 可选软件菜单 ----------
@@ -359,9 +405,10 @@ main() {
     command -v git >/dev/null 2>&1 || die "未找到 git，请先安装: sudo pacman -S git"
     command -v lspci >/dev/null 2>&1 || warn "未找到 lspci（pciutils），跳过 NVIDIA 检测。"
 
+    choose_shell
     install_core
     deploy_dotfiles
-    deploy_dms
+    deploy_shell
     app_menu
     print_tutorial
 }

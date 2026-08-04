@@ -32,8 +32,9 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 1. 检测环境（Arch 系、sudo、网络），无 AUR 助手时自动编译安装 `paru`
 2. 安装**核心软件包**（官方仓库 + AUR）
 3. **备份**已有配置到 `~/.config-backup-<时间戳>/`，再部署 dotfiles
-4. 检测 NVIDIA 显卡并自动启用对应环境变量
-5. 弹出**可选软件模块**菜单（默认全选，回车确认，`q` 跳过）
+4. **选择桌面壳**：Noctalia V5（默认）或 DMS，二选一（两者共用 Niri，配置互斥）
+5. 检测 NVIDIA 显卡并自动启用对应环境变量
+6. 弹出**可选软件模块**菜单（默认全选，回车确认，`q` 跳过）
 
 ## 安装内容 / What gets installed
 
@@ -41,13 +42,13 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 
 | 类别 | 软件包 |
 |---|---|
-| 窗口/桌面 | `niri`、`quickshell-git`、`noctalia-git` |
-| DMS 桌面壳 | `dms-shell`、`dms-shell-niri`、`dsearch-bin` | Material 3 桌面壳（与 Noctalia 双壳并存，见注意事项） |
+| 窗口/桌面 | `niri`、`quickshell-git`、Noctalia V5（`noctalia-git` + `mpvpaper-git`）**或** DMS（`dms-shell` 系列 + `dsearch-bin`） | 安装时二选一，默认 Noctalia（见注意事项） |
 | 壁纸 | `mpvpaper-git`、`ffmpeg` |
 | 终端/Shell | `kitty`、`fish`、`starship`、`fastfetch` |
 | 输入法 | `fcitx5`、`fcitx5-rime`（雾凇拼音） |
 | 音频 | `pipewire`、`wireplumber`、`easyeffects` |
 | 系统集成 | `xdg-desktop-portal-gnome`、`polkit-gnome`、`dconf`、`ddcutil` |
+| 文件管理器 | `nautilus`、`ffmpegthumbnailer`、`file-roller`、`gvfs-smb`、`nautilus-open-any-terminal`、`xdg-terminal-exec` | 缩略图/归档/任意终端打开 |
 | CLI 工具 | `eza`、`fd`、`bat`、`fzf`、`jq`、`inotify-tools` |
 | 字体 | `ttf-jetbrains-mono-nerd`、`noto-fonts-cjk`、`adw-gtk3` |
 
@@ -105,7 +106,7 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 
 - **可选增强（Noctalia overview 动画补丁）**：`patches/noctalia-overview-animation/` 收录了 dock 随 overview 收放的补丁（源码级，需自行编译）；构建后放入 `~/.local/share/noctalia-overview-animation/noctalia` 自动生效，入口脚本会回退到系统版
 - **回滚**：`~/.config-backup-<时间戳>/` 中保留安装前的全部配置，确认无误后可删除
-- **DMS 与 Noctalia 双桌面壳**：两者都是 Quickshell 桌面壳，默认均已安装并启用 spawn，同时运行会叠加。只用 Noctalia：注释 `~/.config/niri/config.kdl` 中的 `"dms"` / `"dsearch"` 两行；只用 DMS：注释 `"noctalia"` spawn，并重载配置（`Mod+Shift+R`）
+- **DMS 与 Noctalia 二选一（安装时）**：两者共用同一 Niri，配置互斥——Noctalia 与 DMS 的 spawn 分别位于 `~/.config/niri/shells/noctalia.kdl` 与 `shells/dms.kdl`，安装脚本按选择启用其一并注释另一。选 DMS 时额外安装 `vulkan-headers` 并部署 DankMaterialShell 配置；安装后不提供运行时切换，如需更换请重新运行安装脚本
 - **壁纸**：静态壁纸与 3 张压缩版动态壁纸（720p，各 2MB 左右）已随仓库分发；更多视频壁纸请自行放入 `~/Pictures/Wallpapers/video/`
 - **locale**：默认 `zh_CN.UTF-8`，若系统未生成该 locale，请修改 `~/.config/niri/config.kdl` 中的 `LANG`
 - **NVIDIA**：脚本检测到 NVIDIA 显卡时自动启用 `GBM_BACKEND=nvidia-drm` 等环境变量

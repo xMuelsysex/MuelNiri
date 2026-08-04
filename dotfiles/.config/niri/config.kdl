@@ -62,23 +62,21 @@ input {
 }
 
 // ========== 自动启动 ==========
-// DMS → Noctalia
-// spawn-at-startup "dms" "run"
-// Keep IP geolocation and weather on the physical route instead of the proxy egress.
-spawn-at-startup "env" "NO_PROXY=api.noctalia.dev,api.open-meteo.com" "no_proxy=api.noctalia.dev,api.open-meteo.com" "noctalia"
-// 在 Niri 总览期间隐藏 Noctalia 顶栏
-spawn-at-startup "~/.config/noctalia/overview-bar-sync.sh"
+// 桌面壳（Noctalia / DMS 互斥，安装时二选一，由 install.sh 按选择启用）
+include "shells/noctalia.kdl"
+// include "shells/dms.kdl"
+
+// 通用 spawn（两壳共用）：
 // 护眼状态与 effects.kdl 对齐
 spawn-at-startup "~/.config/niri/toggle-eyecare.sh" "--sync"
-// 视频壁纸 Monet 抽帧同步守护（mpvpaper assignments）
-spawn-at-startup "~/.config/noctalia/mpvpaper-sync.sh"
-
+// 允许 root 通过用户的 xwayland 打开窗口
+spawn-at-startup "xhost" "+si:localuser:root"
 // 录屏修复
 spawn-sh-at-startup "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri & /usr/lib/xdg-desktop-portal-gnome"
 // GNOME tracker修复
 spawn-sh-at-startup "systemctl --user set-environment XDG_SESSION_CLASS=user"
 // 输入法
-spawn-at-startup "fcitx5"
+spawn-at-startup "fcitx5" "-d"
 // polkit 图形认证代理（挂载/权限弹窗需要）
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 // 截图音效的守护进程

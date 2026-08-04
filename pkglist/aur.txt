@@ -1,7 +1,4 @@
-# 核心必装包（AUR）
+# 核心必装包（AUR，两壳公共：quickshell 运行时 + 终端/文件管理器配套）
 quickshell-git
-noctalia-git
-mpvpaper-git
-dms-shell
-dms-shell-niri
-dsearch-bin
+xdg-terminal-exec
+nautilus-open-any-terminal

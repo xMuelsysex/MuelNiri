@@ -31,3 +31,13 @@ brightnessctl
 wl-clipboard
 gnome-system-monitor
 adw-gtk3
+# 文件管理器配套（缩略图/归档/钥匙环）
+ffmpegthumbnailer
+gvfs-smb
+file-roller
+gnome-keyring
+gst-plugins-base
+gst-plugins-good
+gst-libav
+icoextract
+python-pillow

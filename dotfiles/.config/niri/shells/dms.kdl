@@ -1,0 +1,3 @@
+// DMS 专属 spawn（默认注释；安装选择 DMS 时由 install.sh 启用）
+spawn-at-startup "dms" "run"
+spawn-at-startup "dsearch" "serve"
