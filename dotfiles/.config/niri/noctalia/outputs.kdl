@@ -1,0 +1,7 @@
+// 输出配置 (Shell 侧) — 取消注释并按你的显示器修改
+// output "eDP-1" {
+//     mode "2560x1440@165.001"
+//     scale 1.5
+//     position x=0 y=0
+//     variable-refresh-rate on-demand=true
+// }

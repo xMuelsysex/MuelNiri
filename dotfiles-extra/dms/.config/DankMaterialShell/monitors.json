@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "configurations": [
+    {
+      "id": "auto_default",
+      "name": "Default",
+      "outputs": {}
+    }
+  ]
+}

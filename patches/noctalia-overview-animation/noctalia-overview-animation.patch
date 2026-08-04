@@ -1,0 +1,136 @@
+diff --git a/src/shell/dock/dock.cpp b/src/shell/dock/dock.cpp
+index c9b20cbcd..689839370 100644
+--- a/src/shell/dock/dock.cpp
++++ b/src/shell/dock/dock.cpp
+@@ -362,6 +362,30 @@ void Dock::show() {
+   refresh();
+ }
+ 
++void Dock::setTransientVisible(bool visible) {
++  m_transientVisible = visible;
++  if (m_config == nullptr) {
++    return;
++  }
++
++  if (visible) {
++    scheduleSmartAutoHideReevaluation();
++    return;
++  }
++
++  closeItemMenu();
++  for (const auto& instance : m_instances) {
++    if (instance == nullptr || instance->surface == nullptr) {
++      continue;
++    }
++    clearHoverZoomPointer(*instance);
++    instance->pointerInside = false;
++    instance->inputDispatcher.pointerLeave();
++    shell::dock::startHideFadeOut(*instance, *m_config);
++  }
++  m_hoveredInstance = nullptr;
++}
++
+ void Dock::closeAllInstances() {
+   m_itemMenu.reset();
+   m_lastActiveHandleByAppIdLower.clear();
+@@ -506,7 +530,8 @@ bool Dock::onPointerEvent(const PointerEvent& event) {
+     }
+     updateHoverZoomPointer(*m_hoveredInstance, static_cast<float>(event.sx), static_cast<float>(event.sy));
+     // Auto-hide: show the dock when the pointer enters.
+-    if (dockPointerHideAllowed(m_config->config().dock, *m_hoveredInstance)
++    if (m_transientVisible
++        && dockPointerHideAllowed(m_config->config().dock, *m_hoveredInstance)
+         && m_hoveredInstance->sceneRoot != nullptr) {
+       if (m_hoveredInstance->hideAnimId != 0) {
+         m_hoveredInstance->animations.cancel(m_hoveredInstance->hideAnimId);
+@@ -543,7 +568,9 @@ bool Dock::onPointerEvent(const PointerEvent& event) {
+       m_hoveredInstance->pointerInside = false;
+       m_hoveredInstance->inputDispatcher.pointerLeave();
+ 
+-      if (dockPointerHideAllowed(m_config->config().dock, *m_hoveredInstance) && m_popupOwnerInstance == nullptr) {
++      if (m_transientVisible
++        && dockPointerHideAllowed(m_config->config().dock, *m_hoveredInstance)
++        && m_popupOwnerInstance == nullptr) {
+         shell::dock::startHideFadeOut(*m_hoveredInstance, *m_config);
+       }
+       m_hoveredInstance = nullptr;
+@@ -711,6 +738,13 @@ void Dock::reevaluateSmartAutoHide() {
+       continue;
+     }
+ 
++    if (!m_transientVisible) {
++      if (instance->hideOpacity > 0.0f) {
++        shell::dock::startHideFadeOut(*instance, *m_config);
++      }
++      continue;
++    }
++
+     // Stale pointerInside blocks hide (and can leave smart-hide stuck after grabs / focus
+     // changes). Resync from the compositor before deciding.
+     const wl_surface* surface = instance->surface->wlSurface();
+@@ -817,6 +851,9 @@ void Dock::createInstance(const WaylandOutput& output) {
+ 
+   m_surfaceMap[instance->surface->wlSurface()] = instance.get();
+   m_instances.push_back(std::move(instance));
++  if (!m_transientVisible) {
++    shell::dock::startHideFadeOut(*m_instances.back(), *m_config);
++  }
+ }
+ 
+ // ── Private: scene building ───────────────────────────────────────────────────
+@@ -1277,6 +1314,24 @@ void Dock::registerIpc(IpcService& ipc) {
+       "", "Toggle dock visibility (persists override)"
+   );
+ 
++  ipc.registerHandler(
++      "dock-show-transient",
++      [this](const std::string&) -> std::string {
++        setTransientVisible(true);
++        return "ok\n";
++      },
++      "", "Show the dock without changing configuration"
++  );
++
++  ipc.registerHandler(
++      "dock-hide-transient",
++      [this](const std::string&) -> std::string {
++        setTransientVisible(false);
++        return "ok\n";
++      },
++      "", "Hide the dock without changing configuration"
++  );
++
+   ipc.registerHandler(
+       "dock-reload",
+       [this](const std::string&) -> std::string {
+diff --git a/src/shell/dock/dock.h b/src/shell/dock/dock.h
+index b97f542be..16de97cf2 100644
+--- a/src/shell/dock/dock.h
++++ b/src/shell/dock/dock.h
+@@ -38,6 +38,7 @@ public:
+   bool initialize(CompositorPlatform& platform, ConfigService* config, RenderContext* renderContext);
+   void reload();
+   void show();
++  void setTransientVisible(bool visible);
+   /// Tears down dock surfaces without changing config (e.g. lockscreen widget editor overlay).
+   void suppressDisplay();
+   void unsuppressDisplay();
+@@ -108,4 +109,5 @@ private:
+   bool m_overlayDisplaySuppressed = false;
+   bool m_hadInstancesBeforeOverlaySuppress = false;
+   bool m_smartAutoHideReevalQueued = false;
++  bool m_transientVisible = true;
+ };
+diff --git a/src/shell/dock/dock_instance.h b/src/shell/dock/dock_instance.h
+index cc9abfc26..b3144b486 100644
+--- a/src/shell/dock/dock_instance.h
++++ b/src/shell/dock/dock_instance.h
+@@ -50,7 +50,7 @@ namespace shell::dock {
+     float launcherHoverMainOffset = 0.0f;
+     float launcherVisualScale = -1.0f;
+     AnimationManager::Id launcherScaleAnimId = 0;
+-    // Auto-hide: tracks visibility [0,1] driven by hover.
++    // Tracks visibility [0,1] driven by auto-hide and transient IPC visibility.
+     float hideOpacity = 1.0f;
+     AnimationManager::Id hideAnimId = 0;
+     // smart_auto_hide: active workspace empty (or overview open) — keep the dock visible.

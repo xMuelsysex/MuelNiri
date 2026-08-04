@@ -1,0 +1,2 @@
+# Steam 游戏平台 + 性能监控/缩放工具
+repo:steam mangohud gamescope

@@ -1,0 +1,2 @@
+# Clash Verge Rev 网络代理客户端（AUR 预编译版）
+aur:clash-verge-rev-bin

@@ -1,0 +1,2 @@
+# mark-shot 截图标注工具
+aur:mark-shot

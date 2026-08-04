@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Noctalia 启动入口：优先使用补丁版二进制（overview dock 动画增强），否则回退系统版本。
+# 补丁版构建方法见 patches/noctalia-overview-animation/README.md
+export NOCTALIA_ASSETS_DIR="/usr/share/noctalia/assets"
+if [ -x "$HOME/.local/share/noctalia-overview-animation/noctalia" ]; then
+    exec "$HOME/.local/share/noctalia-overview-animation/noctalia" "$@"
+fi
+exec /usr/bin/noctalia "$@"

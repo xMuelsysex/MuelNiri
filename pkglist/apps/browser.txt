@@ -1,0 +1,2 @@
+# Firefox + pywalfox（随壁纸主题变色）
+repo:firefox python-pywalfox

@@ -1,0 +1,4 @@
+# 核心必装包（AUR）
+quickshell-git
+noctalia-git
+mpvpaper-git

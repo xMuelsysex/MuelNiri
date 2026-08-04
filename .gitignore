@@ -1,0 +1,11 @@
+# 备份/临时文件
+.config-backup-*/
+*.bak
+*.bak-*
+
+# 内部任务记忆（不公开）
+.pi/
+
+# 系统/编辑器
+.DS_Store
+*.swp

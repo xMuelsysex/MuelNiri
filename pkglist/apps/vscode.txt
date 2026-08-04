@@ -1,0 +1,2 @@
+# VS Code（AUR 预编译版）
+aur:visual-studio-code-bin
