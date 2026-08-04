@@ -111,6 +111,53 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 - `~/.config/niri/__custom__.kdl`
 - `~/.config/fish/conf.d/__custom__.fish`
 
+## 虚拟机测试 / Testing in a VM
+
+在虚拟机中完整跑一遍安装流程，验证脚本与配置（推荐在改动后、部署真机前做一次）。
+
+### 1. 下载 ISO
+
+```bash
+# Arch 官方 ISO（约 1.2G）
+curl -L -o ~/Downloads/archlinux.iso https://geo.mirror.pkgbuild.com/iso/latest/archlinux-x86_64.iso
+# 或 CachyOS（脚本同样支持）
+curl -L -o ~/Downloads/cachyos.iso https://mirror.cachyos.org/iso/latest/cachyos-desktop-linux.iso
+```
+
+### 2. 创建虚拟机（virt-manager）
+
+1. 新建虚拟机 → 本地安装介质 → 选择刚下载的 ISO
+2. 配置建议：**内存 4-8G、CPU 4 核、磁盘 40G**（AUR 包需要编译）、显卡选 **Virtio**
+3. 启动进 Live 环境后运行 `archinstall`：
+   - 文件系统：ext4 即可（Btrfs 可选，`quicksave`/`quickload` 快照功能依赖它）
+   - **必须设置 root 密码并创建普通用户**（安装脚本拒绝 root 运行，需要 sudo）
+   - 桌面环境：选 None / Minimal（无需预装桌面）
+   - 网络：默认 DHCP
+
+### 3. 运行安装脚本
+
+```bash
+# 装完重启，普通用户登录后：
+curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
+```
+
+### 4. 验证清单
+
+| 检查项 | 命令 |
+|---|---|
+| paru 自动安装 | `command -v paru` |
+| 核心包装齐 | `paru -Q niri noctalia-git quickshell-git` |
+| 配置已部署 | `ls ~/.config/niri/config.kdl ~/.config/noctalia/config.toml` |
+| niri 能启动 | `dbus-run-session -- niri`（无报错持续运行） |
+| 速查手册 | `muelhelp` |
+| 壁纸已复制 | `ls ~/Pictures/Wallpapers/` |
+
+### 注意事项
+
+- AUR 包（`noctalia-git`/`quickshell-git` 等）编译较慢，10-30 分钟属正常
+- 登录后直接进图形会话：把 `exec dbus-run-session -- niri` 写入 `~/.bash_profile`，或安装显示管理器
+- 测试完直接删除虚拟机即可，不影响宿主机
+
 ## 注意事项 / Notes
 
 - **可选增强（Noctalia overview 动画补丁）**：`patches/noctalia-overview-animation/` 收录了 dock 随 overview 收放的补丁（源码级，需自行编译）；构建后放入 `~/.local/share/noctalia-overview-animation/noctalia` 自动生效，入口脚本会回退到系统版
