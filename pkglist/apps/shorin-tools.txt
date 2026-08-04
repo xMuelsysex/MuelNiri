@@ -1,2 +1,0 @@
-# Shorin 工具箱：pac TUI 装包、sysup 更新、mirror-update 换源、quicksave/quickload(btrfs+snapper)、录屏菜单、侧边栏
-aur:shorin-contrib-git shorin-screenrec-menu-git niri-sidebar-git

@@ -1,0 +1,3 @@
+# AI 工具：opencode（终端 AI 助手）、Obsidian（笔记）、Codex
+repo:opencode
+aur:obsidian-bin codex-app-unofficial

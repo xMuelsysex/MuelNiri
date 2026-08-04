@@ -1,2 +1,0 @@
-# 系统监控与终端文件管理
-repo:btop mission-center yazi gdu

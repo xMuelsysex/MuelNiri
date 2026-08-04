@@ -103,7 +103,6 @@ function muelhelp --description "Niri 桌面速查手册"
         case update
             set_color -o magenta; echo "  [ 配置更新 ]"; set_color normal
             set_color -o yellow; echo -n "     重新运行一键脚本        "; set_color green; echo "-> 拉取最新 dotfiles 并重新部署"; set_color normal
-            set_color -o yellow; echo -n "     niri 配置重载           "; set_color green; echo "-> Mod + Shift + R 热重载 (无需重启)"; set_color normal
             return
         case proxy
             set_color -o magenta; echo "  [ 网络代理控制 ]"; set_color normal
@@ -125,14 +124,16 @@ function muelhelp --description "Niri 桌面速查手册"
             set_color -o blue; echo -n "     Mod + R / Mod + E       "; set_color green; echo "-> 启动 Noctalia Launcher / Nautilus"; set_color normal
             set_color -o blue; echo -n "     Mod + Q                 "; set_color green; echo "-> 关闭当前窗口"; set_color normal
             set_color -o blue; echo -n "     Mod + Tab               "; set_color green; echo "-> 切换工作区概览 (Overview)"; set_color normal
-            set_color -o blue; echo -n "     Mod + Space             "; set_color green; echo "-> 切换预设列宽比例"; set_color normal
-            set_color -o blue; echo -n "     Mod + T                 "; set_color green; echo "-> 切换窗口 浮动 / 平铺"; set_color normal
-            set_color -o blue; echo -n "     Mod + F / Shift+F       "; set_color green; echo "-> 最大化列宽 / 全屏窗口"; set_color normal
-            set_color -o blue; echo -n "     Mod + N                 "; set_color green; echo "-> 切换护眼暖色温模式"; set_color normal
-            set_color -o blue; echo -n "     Mod + L                 "; set_color green; echo "-> 锁定屏幕 (Noctalia Lock)"; set_color normal
-            set_color -o blue; echo -n "     Mod + Shift + S / Print "; set_color green; echo "-> 交互式区域截图"; set_color normal
-            set_color -o blue; echo -n "     Mod + Shift + R         "; set_color green; echo "-> 重载 Niri 桌面配置"; set_color normal
-            set_color -o blue; echo -n "     Mod + Slash (/)        "; set_color green; echo "-> 显示 Niri 原生按键覆盖层"; set_color normal
+            set_color -o blue; echo -n "     Mod + Return            "; set_color green; echo "-> 打开终端 (Kitty)"; set_color normal
+            set_color -o blue; echo -n "     Mod + Z                 "; set_color green; echo "-> 程序菜单 (Noctalia)"; set_color normal
+            set_color -o blue; echo -n "     Mod + E                 "; set_color green; echo "-> 文件管理器"; set_color normal
+            set_color -o blue; echo -n "     Mod + Q / Alt+F4        "; set_color green; echo "-> 关闭窗口 / 强杀窗口"; set_color normal
+            set_color -o blue; echo -n "     Mod + O / Mod+G         "; set_color green; echo "-> 工作区概览"; set_color normal
+            set_color -o blue; echo -n "     Mod + Shift+S / Print   "; set_color green; echo "-> 截图 (mark-shot / niri)"; set_color normal
+            set_color -o blue; echo -n "     Mod + Shift+N           "; set_color green; echo "-> 护眼模式"; set_color normal
+            set_color -o blue; echo -n "     Mod + Alt+L             "; set_color green; echo "-> 锁屏"; set_color normal
+            set_color -o blue; echo -n "     Mod + H/J/K/L           "; set_color green; echo "-> 焦点移动 / Ctrl+同键 移动窗口"; set_color normal
+            set_color -o blue; echo -n "     Mod + Shift+Slash       "; set_color green; echo "-> 快捷键教程覆盖层"; set_color normal
             return
         case shell
             set_color -o magenta; echo "  [ 终端补全与 fzf ]"; set_color normal
@@ -157,7 +158,7 @@ function muelhelp --description "Niri 桌面速查手册"
         set -l choices \
             "1. update 配置更新 (Update)" \
             "2. proxy  网络代理控制 (Proxy)" \
-            "3. pkg    包管理与清理 (Pacman)" \
+            "3. pkg    包管理与缓存清理 (Shelly)" \
             "4. keys   Niri 桌面核心快捷键" \
             "5. shell  终端自动补全与 fzf 导航" \
             "6. all    显示全量手册 (Full Cheatsheet)"
@@ -201,20 +202,11 @@ if status is-interactive
     alias celar "printf '\033[2J\033[3J\033[1;1H'"
     alias claer "printf '\033[2J\033[3J\033[1;1H'"
     
-    # 包管理别名 (自动检测 paru / yay)
-    function __pkg_helper
-        if command -v paru &>/dev/null
-            echo "paru"
-        else if command -v yay &>/dev/null
-            echo "yay"
-        else
-            echo "pacman"
-        end
-    end
-    alias up=(__pkg_helper)' -Syu'               # 一键更新官方包与 AUR
-    alias update=(__pkg_helper)' -Syu'           # 同上，完整拼写
-    alias in=(__pkg_helper)' -S'                 # 安装软件包 (支持官方源/AUR)
-    alias clean='~/.config/fish/clean-cache'     # 运行一键缓存清理脚本
+    # Shelly 统一包管理别名 (CachyOS 官方推荐)
+    alias up='shelly upgrade-all'                 # 一键更新官方包、AUR、Flatpak、AppImage
+    alias update='shelly upgrade-all'             # 同上，完整拼写
+    alias in='shelly install'                     # 安装软件包 (支持官方源/AUR/Flatpak)
+    alias clean='~/.config/fish/clean-cache'      # 运行一键缓存清理脚本
 
     # se：模糊搜索软件包 (官方源 + AUR) 并用 fzf 交互安装
     function se --description "模糊搜索并安装软件包 (官方源 + AUR)"

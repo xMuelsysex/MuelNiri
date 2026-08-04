@@ -1,2 +1,3 @@
-# mpv 视频播放器（附带 hwdec 优化配置）
+# mpv 视频播放器（附带 hwdec 优化配置）；OBS 录屏/直播
 repo:mpv
+aur:obs-studio

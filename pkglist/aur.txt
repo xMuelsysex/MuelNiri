@@ -1,4 +1,17 @@
-# 核心必装包（AUR，两壳公共：quickshell 运行时 + 终端/文件管理器配套）
+# 核心必装包（AUR：桌面壳 + 生态 + TUI 工具箱 + 输入法增强）
 quickshell-git
+noctalia-git
+mpvpaper-git
 xdg-terminal-exec
 nautilus-open-any-terminal
+# Shorin 工具箱（pac/pacd/pacr/sysup 等 TUI 工具全集）
+shorin-contrib-git
+shorin-screenrec-menu-git
+niri-sidebar-git
+# 输入法增强（雾凇拼音 + 词汇/翻译）
+rime-ice-git
+rime-wanxiang-gram-zh-hans
+rime-llm-translator-git
+fcitx5-shorin-patched-git
+# 系统实用工具（AUR 部分，Arch Linux CN 源镜像）
+flclash

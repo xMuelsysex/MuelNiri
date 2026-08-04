@@ -1,2 +1,3 @@
-# Steam 游戏平台 + 性能监控/缩放工具
-repo:steam mangohud gamescope
+# Steam 游戏平台 + 性能监控/缩放工具 + 游戏生态（Lutris/ProtonPlus/帧生成）
+repo:steam mangohud gamescope lutris
+aur:lsfg-vk-bin mangojuice protonplus

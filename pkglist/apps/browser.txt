@@ -1,2 +1,3 @@
-# Firefox + pywalfox（随壁纸主题变色）
+# Firefox + pywalfox（随壁纸主题变色）；Google Chrome
 repo:firefox python-pywalfox
+aur:google-chrome

@@ -1,0 +1,2 @@
+# 聊天：QQ（含剪贴板同步）、微信
+aur:linuxqq linuxqq-clipsync-git wechat-appimage

@@ -31,6 +31,7 @@ scale = 1.2
 shadow = true
 end = [
     "media",
+    "echolyrics",
     "tray",
     "wallpaper",
     "mpvpaper",
@@ -212,11 +213,11 @@ directory = "__HOME__/Pictures/Wallpapers"
 fill_mode = "crop"
 
 [wallpaper.default]
-path = "__HOME__/Pictures/Wallpapers/wallhaven-vpq7m8.png"
+path = "__HOME__/Pictures/Wallpapers/wallhaven-vpq7m8.webp"
 
 
 [plugins]
-enabled = ["noctalia/mpvpaper"]
+enabled = ["noctalia/mpvpaper", "ray/echolyrics"]
 
 [[plugins.source]]
 name = "official"
@@ -229,6 +230,15 @@ name = "community"
 kind = "git"
 location = "https://github.com/noctalia-dev/community-plugins"
 enabled = true
+
+[[plugins.source]]
+name = "ray-echolyrics"
+kind = "path"
+location = "__HOME__/.local/share/noctalia/plugin-sources/ray-echolyrics"
+enabled = true
+
+[widget.echolyrics]
+type = "ray/echolyrics:echolyrics"
 
 [widget.active_window]
 min_length = 0

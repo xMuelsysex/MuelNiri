@@ -17,7 +17,6 @@ screenshot-path "~/Pictures/Screenshots/Niri-screenshots/%Y-%m-%d_%H-%M-%S.png"
 
 // 环境变量
 environment {
-    // 默认中文环境；如果你的系统未生成 zh_CN.UTF-8 locale，请改为 en_US.UTF-8
     LANGUAGE "zh_CN:en"
     LANG "zh_CN.UTF-8"
     // 输入法环境变量
@@ -32,6 +31,10 @@ environment {
     //GSK_RENDERER "gl"
     // 默认文本编辑器
     EDITOR "vim"
+    // NVIDIA 双显卡：install.sh 检测到 NVIDIA 时自动启用以下三行
+    // GBM_BACKEND "nvidia-drm"
+    // __GLX_VENDOR_LIBRARY_NAME "nvidia"
+    // LIBVA_DRIVER_NAME "nvidia"
     XDG_CURRENT_DESKTOP "niri"
     XDG_SESSION_TYPE "wayland"
     ELECTRON_OZONE_PLATFORM_HINT "auto"
@@ -62,25 +65,29 @@ input {
 }
 
 // ========== 自动启动 ==========
-// 桌面壳（Noctalia / DMS 互斥，安装时二选一，由 install.sh 按选择启用）
-include "shells/noctalia.kdl"
-// include "shells/dms.kdl"
-
-// 通用 spawn（两壳共用）：
+// Keep IP geolocation and weather on the physical route instead of the proxy egress.
+spawn-at-startup "env" "NO_PROXY=api.noctalia.dev,api.open-meteo.com" "no_proxy=api.noctalia.dev,api.open-meteo.com" "noctalia"
+// 在 Niri 总览期间隐藏 Noctalia 顶栏
+spawn-at-startup "~/.config/noctalia/overview-bar-sync.sh"
 // 护眼状态与 effects.kdl 对齐
 spawn-at-startup "~/.config/niri/toggle-eyecare.sh" "--sync"
-// 允许 root 通过用户的 xwayland 打开窗口
-spawn-at-startup "xhost" "+si:localuser:root"
+// 视频壁纸 Monet 抽帧同步守护（mpvpaper assignments）
+spawn-at-startup "~/.config/noctalia/mpvpaper-sync.sh"
+
 // 录屏修复
 spawn-sh-at-startup "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri & /usr/lib/xdg-desktop-portal-gnome"
 // GNOME tracker修复
 spawn-sh-at-startup "systemctl --user set-environment XDG_SESSION_CLASS=user"
 // 输入法
-spawn-at-startup "fcitx5" "-d"
+spawn-at-startup "fcitx5"
 // polkit 图形认证代理（挂载/权限弹窗需要）
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 // 截图音效的守护进程
 spawn-at-startup "~/.config/niri/scripts/screenshot-sound.sh"
+// 允许root通过用户的xwayland打开窗口
+spawn-at-startup "xhost" "+si:localuser:root"
+// x11<--> 剪贴板同步
+spawn-at-startup "systemctl" "--user" "start" "linuxqq-clipsync"
 
 // 取消启动niri时自动开启快捷键教程
 hotkey-overlay {
@@ -165,9 +172,9 @@ layer-rule {
 }
 
 // ========== includes ==========
-// 窗口管理键（Shorin，已去 DMS）
+// 窗口管理键（Shorin）
 include "binds-wm.kdl"
-// Super+Tab / Alt-Tab 缩略图（原 dms 生成，内容为 niri recent-windows，可留）
+// Super+Tab / Alt-Tab 缩略图（niri recent-windows）
 include "noctalia/supertab.kdl"
 include "noctalia/alttab.kdl"
 include optional=true "shorin-windowrules.kdl"

@@ -41,3 +41,38 @@ gst-plugins-good
 gst-libav
 icoextract
 python-pillow
+# TUI 工具（日常终端体验）
+btop
+gdu
+yazi
+bluetui
+cava
+lazygit
+neovim
+zoxide
+cmatrix
+lolcat
+sl
+satty
+grim
+slurp
+cliphist
+# 系统实用工具
+baobab
+gparted
+gnome-font-viewer
+virt-manager
+nm-connection-editor
+gnome-calendar
+gnome-clocks
+flatseal
+pavucontrol
+mousepad
+transmission-gtk
+localsend
+mission-center
+lact
+upscaler
+# 输入法附加（日文/五笔）
+fcitx5-mozc
+rime-wubi

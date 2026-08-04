@@ -1,0 +1,2 @@
+# 桌面/AppImage 管理：pins（.desktop 固定）、GearLever（AppImage 管理器）
+aur:pins-git gearlever

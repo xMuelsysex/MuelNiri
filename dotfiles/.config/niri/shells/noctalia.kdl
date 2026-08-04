@@ -1,7 +1,0 @@
-// Noctalia 专属 spawn（默认启用；安装选择 DMS 时由 install.sh 注释）
-// Keep IP geolocation and weather on the physical route instead of the proxy egress.
-spawn-at-startup "env" "NO_PROXY=api.noctalia.dev,api.open-meteo.com" "no_proxy=api.noctalia.dev,api.open-meteo.com" "noctalia"
-// 在 Niri 总览期间隐藏 Noctalia 顶栏
-spawn-at-startup "~/.config/noctalia/overview-bar-sync.sh"
-// 视频壁纸 Monet 抽帧同步守护（mpvpaper assignments）
-spawn-at-startup "~/.config/noctalia/mpvpaper-sync.sh"
