@@ -328,7 +328,7 @@ ${C_BOLD}核心快捷键（Mod = Super/Win 键）：${C_RESET}
   Mod+Slash         快捷键提示覆盖层
 
 ${C_BOLD}常用命令：${C_RESET}
-  nyxhelp           终端与桌面速查手册
+  muelhelp           终端与桌面速查手册
   niri msg action screenshot  手动截图
 
 ${C_BOLD}壁纸：${C_RESET}

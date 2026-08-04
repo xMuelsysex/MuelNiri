@@ -2,7 +2,7 @@
 # Hide Noctalia bar and dock when Niri overview opens; restore when overview closes.
 set -uo pipefail
 
-readonly BAR_NAME="${NYXNIRI_NOCTALIA_BAR_NAME:-bar}"
+readonly BAR_NAME="${MUELNIRI_NOCTALIA_BAR_NAME:-bar}"
 readonly RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
 readonly LOCK_FILE="$RUNTIME_DIR/overview-bar-sync.lock"
 readonly NIRI_SOCKET_PATH="${NIRI_SOCKET:-}"

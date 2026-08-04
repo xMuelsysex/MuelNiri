@@ -14,7 +14,7 @@ LOG_FILE="$LOG_DIR/hook.log"
 
 echo "$(date) wallpaper_changed hook triggered. WP=$WP" >> "$LOG_FILE"
 
-# Overview 模糊层（本地 Shorin 行为，非 Nyx）：与当前壁纸同步
+# Overview 模糊层（本地 Shorin 行为，非 MuelNiri）：与当前壁纸同步
 if [[ -x "$HOME/.config/niri/scripts/overview-blur-sync.sh" ]]; then
     "$HOME/.config/niri/scripts/overview-blur-sync.sh" sync "$WP" >>"$LOG_FILE" 2>&1 ||         echo "overview-blur-sync failed" >>"$LOG_FILE"
 fi

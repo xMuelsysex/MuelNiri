@@ -81,7 +81,7 @@ curl -L https://github.com/xMuelsysex/niri_config/raw/main/install.sh | bash
 | `Mod+Shift+R` | 重载 Niri 配置 |
 | `Mod+Slash` | 快捷键提示覆盖层 |
 
-`Mod` = Super/Win 键。完整列表见 `nyxhelp`（终端内运行）。
+`Mod` = Super/Win 键。完整列表见 `muelhelp`（终端内运行）。
 
 ## 启动 Niri / Starting Niri
 
@@ -115,4 +115,4 @@ curl -L https://github.com/xMuelsysex/niri_config/raw/main/install.sh | bash
 
 GPLv3，见 [LICENSE](LICENSE)。
 
-配置基于 [NyxNiri](https://github.com/ech678/NyxNiri) 与 [Noctalia V5](https://noctalia.dev/)，壁纸版权归原作者所有。
+配置基于 [MuelNiri](https://github.com/ech678/MuelNiri) 与 [Noctalia V5](https://noctalia.dev/)，壁纸版权归原作者所有。

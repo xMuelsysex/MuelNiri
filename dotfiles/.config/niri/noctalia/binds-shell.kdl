@@ -12,7 +12,7 @@ binds {
         spawn-sh "noctalia msg panel-toggle launcher || fuzzel";
     }
 
-    // 控制中心（Nyx 用 Mod+I；此处工作区上下仍是 U/I，故用 Mod+Shift+I）
+    // 控制中心（MuelNiri 用 Mod+I；此处工作区上下仍是 U/I，故用 Mod+Shift+I）
     Mod+Shift+I hotkey-overlay-title="控制中心 Control Center" {
         spawn "noctalia" "msg" "panel-toggle" "control-center";
     }

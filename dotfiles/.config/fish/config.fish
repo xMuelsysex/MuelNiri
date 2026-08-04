@@ -82,9 +82,9 @@ function ask_agy
 end
 
 # ==============================================================================
-# 桌面速查手册 (唯一指令: nyxhelp)
+# 桌面速查手册 (唯一指令: muelhelp)
 # ==============================================================================
-function nyxhelp --description "Niri 桌面速查手册"
+function muelhelp --description "Niri 桌面速查手册"
     set -l section ""
     if test (count $argv) -gt 0
         if test "$argv[1]" = "--section" -a (count $argv) -ge 2
@@ -144,9 +144,9 @@ function nyxhelp --description "Niri 桌面速查手册"
     end
 
     if test -n "$section"
-        nyxhelp header
+        muelhelp header
         for sec in update proxy pkg keys shell
-            nyxhelp --section $sec
+            muelhelp --section $sec
             echo ""
         end
         return
@@ -163,13 +163,13 @@ function nyxhelp --description "Niri 桌面速查手册"
             "6. all    显示全量手册 (Full Cheatsheet)"
 
         set -l selection (printf '%s\n' $choices | fzf \
-            --prompt="nyxhelp > " \
-            --header="指令: nyxhelp | [↑/↓] 移动 | [Enter] 选定 | [Esc] 退出" \
+            --prompt="muelhelp > " \
+            --header="指令: muelhelp | [↑/↓] 移动 | [Enter] 选定 | [Esc] 退出" \
             --preview-window="right:65%:wrap" \
-            --preview="fish -c 'nyxhelp --section {2}'"
+            --preview="fish -c 'muelhelp --section {2}'"
         )
     else
-        nyxhelp --section all
+        muelhelp --section all
     end
 end
 

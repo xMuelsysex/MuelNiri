@@ -5,7 +5,7 @@ This patch adds transient dock visibility IPC commands to Noctalia v5:
 - `dock-hide-transient`
 - `dock-show-transient`
 
-The commands preserve `[dock].enabled` and reuse the dock's native slide animation. NyxNiri's overview listener uses them so the dock animates with the bar when Niri overview opens and closes.
+The commands preserve `[dock].enabled` and reuse the dock's native slide animation. MuelNiri's overview listener uses them so the dock animates with the bar when Niri overview opens and closes.
 
 ## Usage in this repository
 
