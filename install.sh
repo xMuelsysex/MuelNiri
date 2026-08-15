@@ -15,7 +15,11 @@ STATE_FILE="$BASE_DIR/.muelniri_install_progress"
 if [ -f "$SCRIPTS_DIR/00-utils.sh" ]; then
     source "$SCRIPTS_DIR/00-utils.sh"
 else
-    echo "Error: 00-utils.sh not found."
+    echo ""
+    echo "Error: scripts/00-utils.sh not found."
+    echo "install.sh 需要完整仓库（scripts/ 与 pkglist/），请通过引导器运行："
+    echo "  curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/strap.sh | bash"
+    echo ""
     exit 1
 fi
 
