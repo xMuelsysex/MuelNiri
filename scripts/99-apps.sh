@@ -77,64 +77,43 @@ fi
 
 echo ""
 echo -e "   Selected List: ${BOLD}pkglist/apps/*.txt (merged)${NC}"
-echo -e "   ${H_YELLOW}>>> Do you want to CUSTOMIZE the application installation?${NC}"
+echo -e "   ${H_YELLOW}>>> 常用软件选择（默认全选，Tab 取消单项，Ctrl-D 全不选，Esc 跳过）${NC}"
 echo ""
 
-read -t 60 -p "   Please select[Y/n]: " choice
-READ_STATUS=$?
+clear
+echo -e "\n  Loading application list..."
 
-SELECTED_RAW=""
+SELECTED_RAW=$(grep -vE "^\s*#|^\s*$" "$LIST_FILE" | \
+    sed -E 's/[[:space:]]+#/\t#/' | \
+    fzf --multi \
+        --layout=reverse \
+        --border \
+        --margin=1,2 \
+        --prompt="Search App > " \
+        --pointer=">>" \
+        --marker="* " \
+        --delimiter=$'\t' \
+        --with-nth=1 \
+        --bind 'load:select-all' \
+        --bind 'ctrl-a:select-all,ctrl-d:deselect-all,j:down,k:up' \
+        --info=inline \
+        --header="[TAB] TOGGLE | [ENTER] INSTALL | [CTRL-D] DE-ALL | [CTRL-A] SE-ALL" \
+        --preview "echo {} | cut -f2 -d$'\t' | sed 's/^# //'" \
+        --preview-window=down:45%:wrap:border-up \
+        --color=dark \
+        --color=fg+:white,bg+:black \
+        --color=hl:blue,hl+:blue:bold \
+        --color=header:yellow:bold \
+        --color=info:magenta \
+        --color=prompt:cyan,pointer:cyan:bold,marker:green:bold \
+        --color=spinner:yellow)
 
-# Case 1: Timeout (Auto Install ALL - Default to N)
-if [ $READ_STATUS -ne 0 ]; then
-    echo "" 
-    warn "Timeout reached (60s). Auto-installing ALL applications from list..."
-    SELECTED_RAW=$(grep -vE "^\s*#|^\s*$" "$LIST_FILE" | sed -E 's/[[:space:]]+#/\t#/')
+clear
 
-# Case 2: User Input
-else
-    # Enter defaults to Y
-    choice=${choice:-Y}
-    if [[ "$choice" =~ ^[nN]$ ]]; then
-        log "User chose to auto-install ALL applications without customization."
-        SELECTED_RAW=$(grep -vE "^\s*#|^\s*$" "$LIST_FILE" | sed -E 's/[[:space:]]+#/\t#/')
-    else
-        clear
-        echo -e "\n  Loading application list..."
-        
-        SELECTED_RAW=$(grep -vE "^\s*#|^\s*$" "$LIST_FILE" | \
-            sed -E 's/[[:space:]]+#/\t#/' | \
-            fzf --multi \
-                --layout=reverse \
-                --border \
-                --margin=1,2 \
-                --prompt="Search App > " \
-                --pointer=">>" \
-                --marker="* " \
-                --delimiter=$'\t' \
-                --with-nth=1 \
-                --bind 'load:select-all' \
-                --bind 'ctrl-a:select-all,ctrl-d:deselect-all,j:down,k:up' \
-                --info=inline \
-                --header="[TAB] TOGGLE | [ENTER] INSTALL | [CTRL-D] DE-ALL | [CTRL-A] SE-ALL" \
-                --preview "echo {} | cut -f2 -d$'\t' | sed 's/^# //'" \
-                --preview-window=down:45%:wrap:border-up \
-                --color=dark \
-                --color=fg+:white,bg+:black \
-                --color=hl:blue,hl+:blue:bold \
-                --color=header:yellow:bold \
-                --color=info:magenta \
-                --color=prompt:cyan,pointer:cyan:bold,marker:green:bold \
-                --color=spinner:yellow)
-        
-        clear
-        
-        if [ -z "$SELECTED_RAW" ]; then
-            log "Skipping application installation (User cancelled selection in FZF)."
-            trap - INT
-            exit 0
-        fi
-    fi
+if [ -z "$SELECTED_RAW" ]; then
+    log "Skipping application installation (User cancelled selection in FZF)."
+    trap - INT
+    exit 0
 fi
 
 # ------------------------------------------------------------------------------
