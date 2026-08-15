@@ -71,6 +71,8 @@ spawn-at-startup "env" "NO_PROXY=api.noctalia.dev,api.open-meteo.com" "no_proxy=
 spawn-at-startup "~/.config/noctalia/overview-bar-sync.sh"
 // 护眼状态与 effects.kdl 对齐
 spawn-at-startup "~/.config/niri/toggle-eyecare.sh" "--sync"
+// 保持唤醒状态跨重启恢复
+spawn-at-startup "~/.config/niri/toggle-awake.sh" "--sync"
 // 视频壁纸 Monet 抽帧同步守护（mpvpaper assignments）
 spawn-at-startup "~/.config/noctalia/mpvpaper-sync.sh"
 
