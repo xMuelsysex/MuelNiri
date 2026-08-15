@@ -82,7 +82,7 @@ section "MuelNiri Noctalia" "Core Packages (Official Repo)"
 mapfile -t CORE_PKGS < <(grep -vE '^\s*#|^\s*$' "$PARENT_DIR/pkglist/core.txt")
 echo "${CORE_PKGS[*]}" >> "$VERIFY_LIST"
 if ! exe pacman -S --needed --noconfirm "${CORE_PKGS[@]}"; then
-    error "pacman 安装失败：若提示 target not found，请先运行 sudo pacman -Syy 同步索引后重试。"
+    error "pacman 安装失败：若提示 target not found 请先 sudo pacman -Syy 同步索引；若提示 unresolvable package conflicts 请检查是否有包与已装 AUR 版冲突。"
     exit 1
 fi
 success "Official repo packages installed."

@@ -14,9 +14,9 @@ bat
 ttf-jetbrains-mono-nerd
 noto-fonts-cjk
 nautilus
-fcitx5
 fcitx5-rime
 fcitx5-configtool
+# 输入法本体由 02b-musthave 的 fcitx5-shorin-patched-git 提供（conflicts 官方 fcitx5）
 pipewire
 wireplumber
 pipewire-pulse
