@@ -2,9 +2,9 @@
 
 # MuelNiri
 
-**一键配置 Niri + Noctalia 桌面环境** · One-shot Niri desktop setup for Arch / CachyOS
+**Niri + Noctalia 一键安装器** · One-shot Arch Linux desktop installer
 
-基于 Noctalia V5 的 Material You 桌面：动态取色、毛玻璃、护眼模式、动态壁纸。
+基于 Shorin Arch Setup（AGPL-3.0）魔改：模块化安装流程 + btrfs 快照安全网 + 断点续跑 + Noctalia V5 Material You 桌面。
 
 </div>
 
@@ -18,56 +18,51 @@
 - 🎬 **动态壁纸**：mpvpaper 视频壁纸，自动 Monet 抽帧取色
 - ⌨️ 中文友好：Rime 雾凇拼音输入法、中文快捷键提示覆盖层
 - 🧰 **Shorin 工具箱**：`pac`/`pacd`/`pacr` 包管理 TUI、`sysup` 更新、`quicksave`/`quickload` 快照、录屏菜单
-- 🛡️ 安全部署：安装前自动备份旧配置，可随时回滚
+- 🛡️ **系统级安全网**：btrfs 快照（`Before MuelNiri Setup`）、断点续跑（.muelniri_install_progress）、应急回滚工具
+- 📦 **模块化架构**：fzf 桌面菜单 + 可选模块（IWD WiFi / 双系统 / GPU 驱动 / GRUB 主题 / 常用软件）
 
 ## 快速开始 / Quick Start
 
 刚装好的 Arch / CachyOS 系统（任意终端或 TTY）：
 
 ```bash
-curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
+curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/strap.sh | bash
 ```
 
-脚本会自动：
+安装流程：
 
-1. 检测环境（Arch 系、sudo、网络），无 AUR 助手时自动编译安装 `paru`
-2. 安装**核心软件包**（官方仓库 + AUR，含 Noctalia 桌面壳与 Shorin 工具箱）
-3. **备份**已有配置到 `~/.config-backup-<时间戳>/`，再部署 dotfiles
-4. 检测 NVIDIA 显卡并自动启用对应环境变量
-5. 弹出**可选软件模块**菜单（默认全选，回车确认，`q` 跳过）
+1. **引导器**（strap.sh）：环境检测（Linux / x86_64 / 非 Live 环境）→ 下载仓库 → 提权执行
+2. **主安装器**（install.sh）：
+   - fzf 菜单选择桌面：**MuelNiri Noctalia Niri**（推荐）/ Minimal Niri / 无桌面
+   - fzf 多选可选模块（默认全选，Ctrl-X 跳过全部）
+   - 镜像优化（reflector，中国时区可跳过）→ keyring 更新 → 全系统更新
+   - 必装链：btrfs 快照安全网 → base 配置（multilib/字体/locale/archlinuxcn/AUR 助手）→ 用户账户 → 必备软件 → 桌面快照 → 验证
+   - 断点续跑：中断后重跑自动跳过已完成模块（删除 `.muelniri_install_progress` 强制重跑）
+3. **完成**：清理中间快照 → 重建 GRUB → 自动重启
 
-## 安装内容 / What gets installed
+## 桌面模块（04k）安装内容
 
-### 核心（必装）
-
-| 类别 | 软件包 |
+| 类别 | 内容 |
 |---|---|
-| 窗口/桌面 | `niri`、`quickshell-git`、`noctalia-git`（Noctalia V5 桌面壳）、`mpvpaper-git` |
-| 壁纸 | `mpvpaper-git`、`ffmpeg`、`matugen` |
-| 终端/Shell | `kitty`、`fish`、`starship`、`fastfetch` |
-| 输入法 | `fcitx5`、`fcitx5-rime`（雾凇拼音 `rime-ice-git`）、`fcitx5-mozc`（日文）、`rime-wubi`（五笔） |
-| 音频 | `pipewire`、`wireplumber`、`easyeffects` |
-| 系统集成 | `xdg-desktop-portal-gnome`、`polkit-gnome`、`dconf`、`ddcutil` |
-| 文件管理器 | `nautilus`、`ffmpegthumbnailer`、`file-roller`、`gvfs-smb`、`nautilus-open-any-terminal`、`xdg-terminal-exec` |
-| TUI 工具 | `btop`、`gdu`、`yazi`、`bluetui`、`cava`、`lazygit`、`neovim`、`fzf`、`cliphist`、`satty`+`grim`+`slurp`（截图）、`cmatrix`/`lolcat`/`sl` |
-| Shorin 工具箱 | `shorin-contrib-git`（pac/pacd/pacr/sysup/快照等 23 个 TUI 工具）、`shorin-screenrec-menu-git`、`niri-sidebar-git` |
-| 系统实用工具 | `baobab`、`gparted`、`gnome-font-viewer`、`mission-center`、`lact`、`virt-manager`、`nm-connection-editor`、`gnome-calendar`、`gnome-clocks`、`upscaler`、`flatseal`、`pavucontrol`、`mousepad`、`transmission-gtk`、`localsend`、`flclash` |
-| CLI 工具 | `eza`、`fd`、`bat`、`fzf`、`jq`、`inotify-tools` |
-| 字体 | `ttf-jetbrains-mono-nerd`、`noto-fonts-cjk`、`adw-gtk3` |
+| 窗口/桌面 | `niri`、`quickshell-git`、`noctalia-git`、`mpvpaper-git`、`niri-sidebar-git` |
+| 配置部署 | 备份旧配置到 `~/.config-backup-<时间戳>/` → 部署 `dotfiles/` → `__HOME__` 替换 → effects.kdl 软链 → NVIDIA 环境变量自动启用 |
+| 壁纸 | 静态壁纸 + 动态视频壁纸（mp4 → `~/Pictures/Wallpapers/video/`） |
+| 主题 | `adw-gtk-theme-git`、`matugen`、`pywalfox`、`nwg-look`、`breeze-cursors`、Flatpak 主题覆盖 |
+| 输入法 | fcitx5 + Rime 雾凇拼音（`rime-ice-git` + 词汇/翻译增强） |
+| 显示管理器 | 自动安装并启用 `ly`（检测到已有 DM 时跳过） |
+| 浏览器政策 | Firefox 自动安装 pywalfox + uBlock Origin 扩展 |
 
-### 可选模块（TUI 菜单自选，默认全选）
+完整包清单见 [`pkglist/core.txt`](pkglist/core.txt)（官方）与 [`pkglist/aur.txt`](pkglist/aur.txt)（AUR/CN 源）。
 
-| 模块 | 软件包 | 说明 |
-|---|---|---|
-| 浏览器 | `firefox` + `python-pywalfox`、`google-chrome` | 随壁纸自动换肤 |
-| 聊天 | `linuxqq` + `linuxqq-clipsync-git`、`wechat-appimage` | QQ / 微信 |
-| 游戏 | `steam` + `mangohud` + `gamescope`、`lutris`、`protonplus`、`lsfg-vk-bin`、`mangojuice` | 游戏平台与生态 |
-| AI 工具 | `opencode`、`obsidian-bin`、`codex-app-unofficial` | 终端 AI 助手 / 笔记 / Codex |
-| 代理 | `clash-verge-rev-bin` | AUR 预编译 |
-| 截图 | `mark-shot` | 截图标注（绑定 `Mod+Shift+S`） |
-| 视频 | `mpv`（hwdec 优化）、`obs-studio` | 播放 / 录屏直播 |
-| VS Code | `visual-studio-code-bin` | AUR 预编译 |
-| 桌面管理 | `pins-git`、`gearlever` | .desktop 固定 / AppImage 管理 |
+### 可选模块（fzf 多选，默认全选）
+
+| 模块 | 说明 |
+|---|---|
+| IWD WiFi 后端 | NetworkManager → IWD 切换 |
+| Windows 双系统 | 双启动时间修复等 |
+| GPU 驱动 | NVIDIA/AMD 驱动自动安装 |
+| GRUB 主题 | GRUB 美化 |
+| 常用软件 | fzf 多选安装（清单来自 `pkglist/apps/*.txt`） |
 
 ## 快捷键 / Keybindings
 
@@ -77,7 +72,7 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 |---|---|
 | `Mod+Return` | 打开终端 (Kitty) |
 | `Mod+Z` | 程序菜单 (Noctalia) |
-| `Mod+E` | 文件管理器 (Thunar/Nautilus) |
+| `Mod+E` | 文件管理器 (Nautilus) |
 | `Mod+Q` / `Alt+F4` | 关闭窗口 / 强制杀死窗口 |
 | `Mod+O` / `Mod+G` | 工作区概览 |
 | `Mod+Shift+S` / `Print` | 截图 (mark-shot / niri) |
@@ -93,18 +88,20 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 | `Mod+F5` / `Mod+F8` | 快速存档 / 读档 (btrfs 快照) |
 | `Mod+Shift+Slash` | 快捷键教程覆盖层 |
 
-## 启动 Niri / Starting Niri
+## 回滚 / Rollback
 
-- **显示管理器**：登录界面选择 Niri 会话
-- **无 DM**：TTY 登录后运行
+安装器全程有 btrfs 快照保护：
 
-  ```bash
-  dbus-run-session -- niri
-  ```
+```bash
+sudo muelniri-undochange      # 整机回滚到 "Before MuelNiri Setup" 快照
+sudo muelniri-de-undochange   # 桌面层回滚到 "Before Desktop Environments" 快照
+```
+
+（由 00-btrfs-init 安装到 /usr/local/bin，需要 btrfs + snapper + btrfs-assistant）
 
 ## 配置更新 / Updating
 
-重新运行一键脚本即可：拉取最新 dotfiles → 备份旧配置 → 覆盖部署。
+重新运行一键脚本即可：拉取最新配置 → 自动快照 + 备份旧配置 → 覆盖部署（断点续跑跳过已完成步骤）。
 
 个人改动请写入以下文件，更新时会被保留：
 
@@ -113,68 +110,35 @@ curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
 
 ## 虚拟机测试 / Testing in a VM
 
-在虚拟机中完整跑一遍安装流程，验证脚本与配置（推荐在改动后、部署真机前做一次）。
+1. 下载 ISO（Arch 官方或 CachyOS）→ virt-manager 建 VM（内存 4-8G、CPU 4 核、磁盘 40G）
+2. archinstall：文件系统 ext4 即可（btrfs 可选，快照功能依赖它）；**必须创建普通用户**
+3. 装完重启后：
 
-### 1. 下载 ISO
+   ```bash
+   curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/strap.sh | bash
+   ```
 
-```bash
-# Arch 官方 ISO（约 1.2G）
-curl -L -o ~/Downloads/archlinux.iso https://geo.mirror.pkgbuild.com/iso/latest/archlinux-x86_64.iso
-# 或 CachyOS（脚本同样支持）
-curl -L -o ~/Downloads/cachyos.iso https://mirror.cachyos.org/iso/latest/cachyos-desktop-linux.iso
-```
+4. 验证：`muelhelp`、`ls ~/.config/niri/config.kdl`、`dbus-run-session -- niri`
 
-### 2. 创建虚拟机（virt-manager）
-
-1. 新建虚拟机 → 本地安装介质 → 选择刚下载的 ISO
-2. 配置建议：**内存 4-8G、CPU 4 核、磁盘 40G**（AUR 包需要编译）、显卡选 **Virtio**
-3. 启动进 Live 环境后运行 `archinstall`：
-   - 文件系统：ext4 即可（Btrfs 可选，`quicksave`/`quickload` 快照功能依赖它）
-   - **必须设置 root 密码并创建普通用户**（安装脚本拒绝 root 运行，需要 sudo）
-   - 桌面环境：选 None / Minimal（无需预装桌面）
-   - 网络：默认 DHCP
-
-### 3. 运行安装脚本
-
-```bash
-# 装完重启，普通用户登录后：
-curl -L https://github.com/xMuelsysex/MuelNiri/raw/main/install.sh | bash
-```
-
-### 4. 验证清单
-
-| 检查项 | 命令 |
-|---|---|
-| paru 自动安装 | `command -v paru` |
-| 核心包装齐 | `paru -Q niri noctalia-git quickshell-git` |
-| 配置已部署 | `ls ~/.config/niri/config.kdl ~/.config/noctalia/config.toml` |
-| niri 能启动 | `dbus-run-session -- niri`（无报错持续运行） |
-| 速查手册 | `muelhelp` |
-| 壁纸已复制 | `ls ~/Pictures/Wallpapers/` |
-
-### 注意事项
-
-- AUR 包（`noctalia-git`/`quickshell-git` 等）编译较慢，10-30 分钟属正常
-- 登录后直接进图形会话：把 `exec dbus-run-session -- niri` 写入 `~/.bash_profile`，或安装显示管理器
-- 测试完直接删除虚拟机即可，不影响宿主机
+> 注意：AUR 包（`noctalia-git`/`quickshell-git` 等）编译较慢，10-30 分钟属正常；安装器结束会自动重启。
 
 ## 注意事项 / Notes
 
 - **可选增强（Noctalia overview 动画补丁）**：`patches/noctalia-overview-animation/` 收录了 dock 随 overview 收放的补丁（源码级，需自行编译）；构建后放入 `~/.local/share/noctalia-overview-animation/noctalia` 自动生效，入口脚本会回退到系统版
 - **回滚**：`~/.config-backup-<时间戳>/` 中保留安装前的全部配置，确认无误后可删除
 - **壁纸**：静态壁纸与 3 张压缩版动态壁纸（720p，各 2MB 左右）已随仓库分发；更多视频壁纸请自行放入 `~/Pictures/Wallpapers/video/`
-- **locale**：默认 `zh_CN.UTF-8`，若系统未生成该 locale，请修改 `~/.config/niri/config.kdl` 中的 `LANG`
-- **NVIDIA**：脚本检测到 NVIDIA 显卡时自动启用 `GBM_BACKEND=nvidia-drm` 等环境变量
-- **显示管理器**：脚本不安装 DM；需要的话 `sudo pacman -S ly && sudo systemctl enable ly`
-- **AUR 来源包**：`linuxqq`/`wechat-appimage`/`lsfg-vk-bin` 等部分包在 CachyOS / ArchLinuxCN 仓库中也有，脚本统一走 AUR helper 安装以保证标准 Arch 可用
+- **locale**：01a-base 模块自动生成 en_US.UTF-8 + zh_CN.UTF-8；TTY 中文显示需要 CJK 控制台字体
+- **NVIDIA**：04k 检测到 NVIDIA 显卡时自动启用 `GBM_BACKEND=nvidia-drm` 等环境变量
+- **AUR 来源包**：`linuxqq`/`wechat-appimage`/`flclash` 等部分包在 CachyOS / ArchLinuxCN 仓库中也有，统一走 AUR helper 安装以保证标准 Arch 可用
 
 ## 致谢 / Credits
 
-- [Shorin-ArchLinux-Guide](https://github.com/SHORiN-KiWATA/Shorin-ArchLinux-Guide/tree/main) —— 一键配置脚本的模块化设计参考、键位/工具脚本来源
-- [NyxNiri](https://github.com/ech678/NyxNiri) —— 本配置的 Noctalia 集成最初来源
+- [Shorin Arch Setup](https://github.com/SHORiN-KiWATA/shorin-arch-setup) —— 本安装器架构基底（AGPL-3.0 魔改）
+- [Shorin-ArchLinux-Guide](https://github.com/SHORiN-KiWATA/Shorin-ArchLinux-Guide/tree/main) —— 键位/工具脚本来源
+- [NyxNiri](https://github.com/ech678/NyxNiri) —— dotfiles 的 Noctalia 集成最初来源
 
 ## License
 
-GPLv3，见 [LICENSE](LICENSE)。
+AGPL-3.0，见 [LICENSE](LICENSE) 与 [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)。
 
 配置最初来源于 NyxNiri 项目，配合 Noctalia V5 使用；壁纸版权归原作者所有。

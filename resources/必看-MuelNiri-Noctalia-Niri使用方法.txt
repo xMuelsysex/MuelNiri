@@ -1,0 +1,53 @@
+============================================
+  MuelNiri Noctalia Niri 使用方法速查
+============================================
+
+【启动 Niri】
+  1. 显示管理器：本安装器默认安装 ly，登录界面选择 Niri 会话
+  2. 无显示管理器：TTY 登录后运行  dbus-run-session -- niri
+
+【核心快捷键】（Mod = Super/Win 键）
+  Mod+Return         打开终端 (Kitty)
+  Mod+Z              程序菜单 (Noctalia)
+  Mod+E              文件管理器 (Nautilus)
+  Mod+Q / Alt+F4     关闭窗口 / 强制杀死窗口
+  Mod+O / Mod+G      工作区概览
+  Mod+Shift+S / Print 截图 (mark-shot / niri)
+  Mod+Shift+N        护眼模式（暖色温 + 关毛玻璃）
+  Mod+Alt+L          锁屏
+  Mod+Alt+W / Mod+Y  切换壁纸（静态，自动 Monet 取色）
+  Mod+Shift+Y        动态视频壁纸（mp4 放入 ~/Pictures/Wallpapers/video/）
+  Mod+H/J/K/L        焦点移动
+  Mod+Ctrl+H/J/K/L   移动窗口
+  Mod+Alt+Z          侧边栏展开/收起
+  Mod+F1             开关输入法 (fcitx5)
+  Mod+F3             录屏菜单
+  Mod+F5 / Mod+F8    快速存档 / 读档 (btrfs 快照)
+  Mod+Shift+Slash    快捷键提示覆盖层
+
+【常用命令】
+  muelhelp            终端与桌面速查手册（muelhelp keys 查看键位）
+  pac / pacd / pacr   包管理 TUI（Shorin 工具箱）
+  sysup               系统更新
+  quicksave/quickload btrfs 快照存档/读档
+
+【输入法】
+  fcitx5 已配置 Rime（雾凇拼音）。首次使用请打开"输入法配置"添加。
+
+【壁纸】
+  静态壁纸与 3 张压缩版动态壁纸已随仓库分发；
+  更多视频壁纸自行放入 ~/Pictures/Wallpapers/video/，Mod+Shift+Y 切换。
+
+【配置更新】
+  重新运行一键脚本即可拉取最新配置并覆盖部署（自动快照 + 备份旧配置）。
+  备份位于 ~/.config-backup-<时间戳>/，确认无误后可删除。
+
+【自定义（更新时保留）】
+  ~/.config/niri/__custom__.kdl
+  ~/.config/fish/conf.d/__custom__.fish
+
+【回滚】
+  安装器已完成 btrfs 快照（Before MuelNiri Setup / Before Desktop Environments）。
+  应急回滚：sudo muelniri-undochange（整机） / sudo muelniri-de-undochange（桌面层）
+
+祝使用愉快！有问题欢迎到项目仓库反馈。

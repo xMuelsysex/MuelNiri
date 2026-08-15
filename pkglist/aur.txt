@@ -13,5 +13,18 @@ rime-ice-git
 rime-wanxiang-gram-zh-hans
 rime-llm-translator-git
 fcitx5-shorin-patched-git
+# 桌面外观（libadwaita 主题的 GTK3 移植 + Monet 取色）
+adw-gtk-theme-git
+matugen
+python-pywalfox
 # 系统实用工具（AUR 部分，Arch Linux CN 源镜像）
 flclash
+localsend
+upscaler
+# TUI 工具（AUR 部分）
+timg
+wl-screenrec-git
+# Shorin 生态（AUR 部分）
+miyu
+shorin-proton-wrapper-git
+ttf-jetbrains-maple-mono-nf-xx-xx

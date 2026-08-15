@@ -30,7 +30,6 @@ playerctl
 brightnessctl
 wl-clipboard
 gnome-system-monitor
-adw-gtk3
 # 文件管理器配套（缩略图/归档/钥匙环）
 ffmpegthumbnailer
 gvfs-smb
@@ -57,6 +56,11 @@ satty
 grim
 slurp
 cliphist
+wf-recorder
+libnotify
+imv
+imagemagick
+opencode
 # 系统实用工具
 baobab
 gparted
@@ -69,10 +73,13 @@ flatseal
 pavucontrol
 mousepad
 transmission-gtk
-localsend
 mission-center
 lact
-upscaler
+firefox
+# 桌面外观（GTK3/GTK4 主题生态）
+nwg-look
+breeze-cursors
+bazaar
 # 输入法附加（日文/五笔）
 fcitx5-mozc
 rime-wubi
