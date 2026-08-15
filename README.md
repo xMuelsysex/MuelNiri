@@ -120,6 +120,10 @@ sudo muelniri-de-undochange   # 桌面层回滚到 "Before Desktop Environments"
 
 4. 验证：`muelhelp`、`ls ~/.config/niri/config.kdl`、`dbus-run-session -- niri`
 
+> **显卡选择（重要）**：niri 需要 GPU 的 OpenGL 上下文（DRM atomic + virgl）。
+> - **Linux 宿主 + NVIDIA 显卡**：virt-manager 的 virtio-gpu **无法开启 virgl 3D 加速**（NVIDIA 闭源驱动在 Wayland 下不支持 QEMU 的 EGL 渲染），guest 内 niri 报 `Failed to open device: Invalid argument` 黑屏——**推荐改用 Windows 宿主 + VMware/VirtualBox**
+> - **Windows 宿主**：VMware Workstation 勾选 "Accelerate 3D graphics"（vmwgfx 驱动对 Linux guest 支持最完整）；VirtualBox 用 VMSVGA + 3D 加速次选；**Hyper-V 有已知 os error 11 问题，不要用**
+
 > 注意：AUR 包（`noctalia-git`/`quickshell-git` 等）编译较慢，10-30 分钟属正常；安装器结束会自动重启。
 
 ## 注意事项 / Notes
